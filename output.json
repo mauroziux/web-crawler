@@ -1,4 +1,19 @@
 [
-    "https://www.miproteina.com.co",
-    "https://www.miproteina.com.co/customer/account/create/"
+    {
+        "link": "https://www.miproteina.com.co",
+        "product": false,
+        "visited": true,
+        "_id": "912191f5-c088-4f4e-9b05-3204a77eeb5b",
+        "_rev": "1-2e063b7061af877a8ee308d3f8705b9a"
+    },
+    {
+        "link": "https://www.miproteina.com.co/tienda-suplementos-florencia/",
+        "product": false,
+        "visited": true
+    },
+    {
+        "link": "https://www.miproteina.com.co/customer/account/create/",
+        "product": false,
+        "visited": true
+    }
 ]
