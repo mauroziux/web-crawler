@@ -5,13 +5,18 @@ const fs = require('fs');
 const axios = require('axios');
 const PouchDB = require('pouchdb');
 
-let db = new PouchDB('crawler');
+
+let db = new PouchDB('http://mauroziux:caremico@127.0.0.1:5984/crawler');
+
+
+
+
 let pagesVisited = [];
 let numPagesVisited = 0;
-let maxPageToVisite = 2;
+let maxPageToVisite = 1;
 let pagesToVisit = [];
 let result = [];
-let START_URL = "https://www.miproteina.com.co";
+let START_URL = "http://www.miproteina.com.co";
 let url = new URL(START_URL);
 let baseUrl = url.protocol + "//" + url.hostname;
 let HOSTNAME = url.hostname;
@@ -20,21 +25,21 @@ let HOSTNAME = url.hostname;
 db.get('initial').then(function (doc) {
     //obtener todos los id
     //hacer la consulta uno a uno para saber cuales se han visitado y cuales no
-    db.allDocs({
-        include_docs: true,
-    }).then(function (result) {
-        result.rows.map(function (item) {
-            if (item.doc.visited) {
-                pagesVisited.push(item.doc);
-            } else {
-                pagesToVisit.push(item.doc);
-            }
-        })
+    db.allDocs({include_docs: true,})
+        .then(function (result) {
+            result.rows.map(function (item) {
+                if (item.doc.visited) {
+                    pagesVisited.push(item.doc);
+                } else {
+                    pagesToVisit.push(item.doc);
+                }
+            })
 
-        crawl();
-    }).catch(function (err) {
-        console.log(err);
-    });
+            crawl();
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
 }).catch(function (err) {
     let inicial_object = {
         link: START_URL,
@@ -64,9 +69,9 @@ function crawl() {
             console.log(err);
         });
 
-
         return
     }
+
     let nextPage = pagesToVisit.pop();
 
     let visited = pagesVisited.filter(function (item) {
@@ -103,20 +108,22 @@ function visitPage(url, callback) {
             product: $('meta[itemprop="price"]').attr('content') ? true : false,
             visited: true,
         }
-        console.log(pagesVisited)
+        //console.log(pagesVisited)
 
         let page_exist_in_db = pagesVisited.map(function (item) {
             return item.link == url.link
         })
 
+        console.log(page_exist_in_db.length > 0)
+
         if (page_exist_in_db.length > 0) {
-            console.log(page_exist_in_db[0])
-            url_object['_id']=page_exist_in_db[0]._id
-            url_object['_rev']=page_exist_in_db[0]._rev
+
+            url_object['_id'] = page_exist_in_db[0]._id
+            url_object['_rev'] = page_exist_in_db[0]._rev
             db.put(url_object).then(function (response) {
-                console.log(response)
+                //console.log(response)
             }).catch(function (err) {
-                console.log(err)
+                //console.log(err)
             });
         } else {
             put_object_db(url_object)
@@ -176,16 +183,19 @@ function put_collect_url_db(url) {
 }
 
 function checkUrl(temp_url) {
+
     let temp = pagesToVisit.filter(function (item) {
         return item == temp_url
     })
-
+    
     temp_url = new URL(temp_url);
 
     if (temp.length > 0 || HOSTNAME != temp_url.hostname) {
+        console.log(temp.length,'no red')
         return false
+    }else {
+        console.log(temp.length,'checked')
+
+        return temp_url.protocol + "//" + temp_url.hostname + temp_url.pathname;
     }
-
-
-    return temp_url.protocol + "//" + temp_url.hostname + temp_url.pathname;
 }
