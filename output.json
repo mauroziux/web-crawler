@@ -1,13 +1,6 @@
 [
     {
-        "_id": "4afe67d2b25985d43ca9e72120762f01",
-        "_rev": "1-d1cafa75e88dab8c6b699e2ea38d3fb2",
         "link": "http://www.miproteina.com.co",
-        "product": false,
-        "visited": true
-    },
-    {
-        "link": "https://twitter.com/mi_proteina",
         "product": false,
         "visited": true
     }

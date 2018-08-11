@@ -5,11 +5,7 @@ const fs = require('fs');
 const axios = require('axios');
 const PouchDB = require('pouchdb');
 
-
-let db = new PouchDB('http://mauroziux:caremico@127.0.0.1:5984/crawler');
-
-
-
+let db = new PouchDB('http://127.0.0.1:5985/crawler');
 
 let pagesVisited = [];
 let numPagesVisited = 0;
@@ -20,7 +16,6 @@ let START_URL = "http://www.miproteina.com.co";
 let url = new URL(START_URL);
 let baseUrl = url.protocol + "//" + url.hostname;
 let HOSTNAME = url.hostname;
-
 
 db.get('initial').then(function (doc) {
     //obtener todos los id
@@ -185,17 +180,16 @@ function put_collect_url_db(url) {
 function checkUrl(temp_url) {
 
     let temp = pagesToVisit.filter(function (item) {
-        return item == temp_url
+        return item.link == temp_url
     })
-    
+
     temp_url = new URL(temp_url);
 
-    if (temp.length > 0 || HOSTNAME != temp_url.hostname) {
-        console.log(temp.length,'no red')
+    if (parseInt(temp.length) > 0 || HOSTNAME != temp_url.hostname) {
+
         return false
     }else {
-        console.log(temp.length,'checked')
-
+        console.log(temp.length,'red',temp_url.hostname + temp_url.pathname)
         return temp_url.protocol + "//" + temp_url.hostname + temp_url.pathname;
     }
 }

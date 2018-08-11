@@ -11,6 +11,7 @@
     "crawler": "^1.1.4",
     "fs": "^0.0.1-security",
     "pouchdb": "^7.0.0",
+    "pouchdb-server": "^4.0.1",
     "request": "^2.65.0",
     "url-parse": "^1.0.5"
   }
